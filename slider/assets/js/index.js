@@ -17,34 +17,33 @@ const slides = [
   },
 ];
 
+// MVVM -- Model - View - ViewModel (MVC, MVP)
+
+// стан
 let currentSlideIndex = 0;
 
 // встановити як початкове нульове зображення
 const sliderImg = document.querySelector(".sliderImg");
 
-sliderImg.src = slides[currentSlideIndex].src;
-sliderImg.alt = slides[currentSlideIndex].alt;
+updateSlider(currentSlideIndex);
 
 // при натисканні на next відобразити наступне зображення
 const [prevBtn, nextBtn] = document.querySelectorAll("button");
 
 prevBtn.onclick = () => {
-  if (currentSlideIndex > 0) {
-    currentSlideIndex--;
-  } else {
-    currentSlideIndex = slides.length - 1;
-  }
-  sliderImg.src = slides[currentSlideIndex].src;
-  sliderImg.alt = slides[currentSlideIndex].alt;
+  currentSlideIndex = (currentSlideIndex - 1 + slides.length) % slides.length;
+
+  updateSlider(currentSlideIndex);
 };
 
+// при натисканні на prev відобразити попереднє зображення
 nextBtn.onclick = () => {
-  if (currentSlideIndex < slides.length - 1) {
-    currentSlideIndex++;
-  } else {
-    currentSlideIndex = 0;
-  }
+  currentSlideIndex = (currentSlideIndex + 1) % slides.length;
 
-  sliderImg.src = slides[currentSlideIndex].src;
-  sliderImg.alt = slides[currentSlideIndex].alt;
+  updateSlider(currentSlideIndex);
 };
+
+function updateSlider(currentIndex) {
+  sliderImg.src = slides[currentIndex].src;
+  sliderImg.alt = slides[currentIndex].alt;
+}
