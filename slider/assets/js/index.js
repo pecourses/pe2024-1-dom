@@ -19,31 +19,33 @@ const slides = [
 
 // MVVM -- Model - View - ViewModel (MVC, MVP)
 
-// стан
-let currentSlideIndex = 0;
-
-// встановити як початкове нульове зображення
+// ViewModel
 const sliderImg = document.querySelector(".sliderImg");
-
-updateSlider(currentSlideIndex);
-
-// при натисканні на next відобразити наступне зображення
 const [prevBtn, nextBtn] = document.querySelectorAll("button");
-
-prevBtn.onclick = () => {
-  currentSlideIndex = (currentSlideIndex - 1 + slides.length) % slides.length;
-
-  updateSlider(currentSlideIndex);
-};
-
-// при натисканні на prev відобразити попереднє зображення
-nextBtn.onclick = () => {
-  currentSlideIndex = (currentSlideIndex + 1) % slides.length;
-
-  updateSlider(currentSlideIndex);
-};
 
 function updateSlider(currentIndex) {
   sliderImg.src = slides[currentIndex].src;
   sliderImg.alt = slides[currentIndex].alt;
 }
+
+try {
+  const slider = new Slider(slides, 1);
+
+  updateSlider(slider.currentIndex);
+
+  prevBtn.onclick = () => {
+    slider.decIndex();
+    updateSlider(slider.currentIndex);
+  };
+
+  nextBtn.onclick = () => {
+    slider.incIndex();
+    updateSlider(slider.currentIndex);
+  };
+} catch (err) {
+  sliderImg.src =
+    "https://cdn.vectorstock.com/i/500p/65/30/default-image-icon-missing-picture-page-vector-40546530.jpg";
+  sliderImg.alt = "unavailable image";
+}
+
+console.log("after error");
