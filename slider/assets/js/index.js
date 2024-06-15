@@ -1,6 +1,6 @@
 const slides = [
   {
-    src: "https://images.pexels.com/photos/624015/pexels-photo-624015.jpeg",
+    src: "htps://images.pexels.com/photos/624015/pexels-photo-624015.jpeg",
     alt: "landscape1",
   },
   {
@@ -28,9 +28,18 @@ function updateSlider(currentIndex) {
   sliderImg.alt = slides[currentIndex].alt;
 }
 
-try {
-  const slider = new Slider(slides, 1);
+function sliderError() {
+  sliderImg.src =
+    "https://cdn.vectorstock.com/i/500p/65/30/default-image-icon-missing-picture-page-vector-40546530.jpg";
+  sliderImg.alt = "unavailable image";
+}
 
+sliderImg.onerror = () => {
+  sliderError();
+};
+
+try {
+  const slider = new Slider(slides, 0);
   updateSlider(slider.currentIndex);
 
   prevBtn.onclick = () => {
@@ -43,9 +52,7 @@ try {
     updateSlider(slider.currentIndex);
   };
 } catch (err) {
-  sliderImg.src =
-    "https://cdn.vectorstock.com/i/500p/65/30/default-image-icon-missing-picture-page-vector-40546530.jpg";
-  sliderImg.alt = "unavailable image";
+  sliderError();
 }
 
 console.log("after error");
