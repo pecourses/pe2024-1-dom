@@ -17,6 +17,23 @@
 const WEATHER_URL =
   "https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current=temperature_2m,precipitation,wind_speed_10m&timezone=auto";
 
+let isCelsij = true;
+
+const tempUnitBtn = document.querySelector(".tempUnitBtn");
+tempUnitBtn.textContent = `Switch to ${isCelsij ? "F" : "C"}`;
+
+tempUnitBtn.addEventListener("click", changeTempUnit);
+
+function changeTempUnit() {
+  isCelsij = !isCelsij;
+  tempUnitBtn.textContent = `Switch to ${isCelsij ? "F" : "C"}`;
+
+  fetch(`${WEATHER_URL}${isCelsij ? "" : "&temperature_unit=fahrenheit"}`)
+    .then(response => response.json())
+    .then(data => updateWeather(data))
+    .catch(error => console.log("error :>> ", error));
+}
+
 // Задати URL
 // Використати data
 fetch(WEATHER_URL)
