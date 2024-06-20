@@ -1,15 +1,34 @@
 .sliderWrapper {
-  width: 400px;
-  height: 200px;
+  max-width: 400px;
+  min-width: 200px;
+  width: 100%;
+  aspect-ratio: 2;
   margin: 100px auto 0;
   position: relative;
+  overflow: hidden;
 }
 
-.sliderImg {
+.prevSliderImg,
+.currentSliderImg,
+.nextSliderImg {
+  position: absolute;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: 0.2s linear left;
 }
+
+/* .prevSliderImg {
+  left: -100%;
+}
+
+.currentSliderImg {
+  left: 0;
+}
+
+.nextSliderImg {
+  left: 100%;
+} */
 
 .prevBtn,
 .nextBtn {
@@ -35,4 +54,26 @@
 
 .nextBtn {
   right: 10px;
+}
+
+.navSlider {
+  position: absolute;
+  padding: 5px;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 5px;
+}
+
+.navCircle {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: lightgrey;
+  transition: 0.2s linear background-color;
+}
+
+.activeCircle {
+  background-color: green;
 }

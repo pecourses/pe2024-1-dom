@@ -18,29 +18,45 @@ class Slider {
     this._currentIndex = value;
   }
 
+  get prevIndex() {
+    const {
+      currentIndex,
+      slides: { length },
+    } = this;
+
+    return (currentIndex - 1 + length) % length;
+  }
+
   get currentIndex() {
     return this._currentIndex;
   }
 
-  decIndex() {
+  get nextIndex() {
     const {
       currentIndex,
       slides: { length },
     } = this;
 
-    this.currentIndex = (currentIndex - 1 + length) % length;
+    return (currentIndex + 1) % length;
+  }
+
+  decIndex() {
+    this.currentIndex = this.prevIndex;
   }
 
   incIndex() {
-    const {
-      currentIndex,
-      slides: { length },
-    } = this;
+    this.currentIndex = this.nextIndex;
+  }
 
-    this.currentIndex = (currentIndex + 1) % length;
+  get prevSlide() {
+    return slides[this.prevIndex];
   }
 
   get currentSlide() {
     return slides[this.currentIndex];
+  }
+
+  get nextSlide() {
+    return slides[this.nextIndex];
   }
 }

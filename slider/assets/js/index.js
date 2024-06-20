@@ -20,20 +20,35 @@ const slides = [
 // MVVM -- Model - View - ViewModel (MVC, MVP)
 
 // ViewModel
-const sliderImg = document.querySelector(".sliderImg");
+const [prevSliderImg, currentSliderImg, nextSliderImg] =
+  document.querySelectorAll("img");
+
 const [prevBtn, nextBtn] = document.querySelectorAll("button");
 
-sliderImg.onerror = () => sliderError();
+currentSliderImg.onerror = () => sliderError();
+
+const navContainer = document.querySelector(".navSlider");
+const navCircles = slides.map(s => {
+  const navCircle = document.createElement("div");
+  navCircle.classList.add("navCircle");
+  return navCircle;
+});
+navContainer.append(...navCircles);
 
 try {
   const slider = new Slider(slides, 0);
-  updateSlider(slider.currentSlide);
+  updateSlider(slider.prevSlide, slider.currentSlide, slider.nextSlide, slider);
 
-  // 'prev', 'next'
   function changeSlideHandler(direction = "next") {
     return () => {
       slider[direction === "prev" ? "decIndex" : "incIndex"]();
-      updateSlider(slider.currentSlide);
+      updateSlider(
+        slider.prevSlide,
+        slider.currentSlide,
+        slider.nextSlide,
+        slider,
+        direction
+      );
     };
   }
 
@@ -41,16 +56,59 @@ try {
   nextBtn.onclick = changeSlideHandler("next");
 } catch (err) {
   sliderError();
+  console.log("err :>> ", err);
 }
 
-function updateSlider(currentSlide) {
-  sliderImg.src = currentSlide.src;
-  sliderImg.alt = currentSlide.alt;
+function updateSlider(prevSlide, currentSlide, nextSlide, slider, direction) {
+  switch (direction) {
+    case "prev":
+      prevSliderImg.style.transition = "none";
+      prevSliderImg.style.left = "-200%";
+      currentSliderImg.style.transition = "none";
+      currentSliderImg.style.left = "-100%";
+      nextSliderImg.style.transition = "none";
+      nextSliderImg.style.left = "0%";
+      break;
+    case "next":
+      prevSliderImg.style.transition = "none";
+      prevSliderImg.style.left = "0%";
+      currentSliderImg.style.transition = "none";
+      currentSliderImg.style.left = "100%";
+      nextSliderImg.style.transition = "none";
+      nextSliderImg.style.left = "200%";
+      break;
+    default:
+      break;
+  }
+
+  prevSliderImg.src = prevSlide.src;
+  prevSliderImg.alt = prevSlide.alt;
+
+  currentSliderImg.src = currentSlide.src;
+  currentSliderImg.alt = currentSlide.alt;
+
+  nextSliderImg.src = nextSlide.src;
+  nextSliderImg.alt = nextSlide.alt;
+
+  navCircles[
+    direction === "prev" ? slider.nextIndex : slider.prevIndex
+  ].classList.remove("activeCircle");
+  navCircles[slider.currentIndex].classList.add("activeCircle");
+
+  setTimeout(() => {
+    prevSliderImg.style.transition = "0.2s linear left";
+    currentSliderImg.style.transition = "0.2s linear left";
+    nextSliderImg.style.transition = "0.2s linear left";
+    prevSliderImg.style.left = "-100%";
+    currentSliderImg.style.left = "0%";
+    nextSliderImg.style.left = "100%";
+  }, 0);
 }
 
 function sliderError() {
-  sliderImg.src =
+  currentSliderImg.src =
     "https://cdn.vectorstock.com/i/500p/65/30/default-image-icon-missing-picture-page-vector-40546530.jpg";
-  sliderImg.alt = "unavailable image";
+  currentSliderImg.alt = "unavailable image";
 }
+
 console.log("after error");
