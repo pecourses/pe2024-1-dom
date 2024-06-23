@@ -1,27 +1,52 @@
 "use strict";
 
-const newsItem = {
-  title: "News Title",
-  body: "News Body News Body News Body News Body News Body News Body News Body News Body ",
-  date: "2024-05-10",
-};
-// додати в розмітку дату
+const USERS_URL = "https://randomuser.me/api/?results=5";
 
-const sectionEl = document.querySelector(".section");
-// create
+const rootEl = document.querySelector("#root");
+// згенерувати список користувачів
+// у кожного користувача відображати
+// зображення профілю, ім'я, вік
+// передбачити можливість видалення користувача зі списку
 
-const articleEl = document.createElement("article");
-sectionEl.append(articleEl);
+fetch(USERS_URL)
+  .then(response => response.json())
+  .then(({ results }) => genSingleUser(results[0]))
+  .catch(err => console.log("err :>> ", err));
 
-const h3El = createNewElement("h3", newsItem.title);
-const pEl = createNewElement("p", newsItem.body);
-const dateEl = createNewElement("p", newsItem.date);
+function genSingleUser({
+  picture: { large: imgSrc },
+  name: { first, last },
+  dob: { age },
+}) {
+  // сворити елемент
+  // налаштувати (контент, стилі, атрибути, ...)
+  // навісити обробник
+  // додати елемент в розмітку
 
-articleEl.append(h3El, pEl, dateEl);
-// add to html
+  const userCard = document.createElement("article");
+  rootEl.append(userCard);
+  userCard.classList.add("userCard");
 
-function createNewElement(type, content) {
-  const newElement = document.createElement(type);
-  newElement.textContent = content;
-  return newElement;
+  // додати img (створити, задати клас, src з imgSrc,
+  //             alt - конкатенація first, last )
+  const imgEl = document.createElement("img");
+  imgEl.classList.add("userImg");
+  imgEl.src = imgSrc;
+  imgEl.alt = `${first} ${last}`;
+  userCard.appendChild(imgEl);
+
+  const userName = document.createElement("h2");
+  userName.classList.add("userName");
+  userName.textContent = `${first} ${last}`;
+  userCard.append(userName);
+
+  const userAge = document.createElement("p");
+  userAge.classList.add("userAge");
+  userAge.textContent = age;
+  userCard.append(userAge);
+
+  const trashIcon = document.createElement("button");
+  trashIcon.classList.add("trashIcon");
+  trashIcon.innerHTML = `<i class="fa-solid fa-trash"></i>`;
+  userCard.append(trashIcon);
 }
